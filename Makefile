@@ -2,7 +2,7 @@ install:
 	npm install
 
 start:
-	npx babel-node src/bin/brain-prime.js
+	npx babel-node ./dist/bin/main.js
 		
 publish:
 	npm publish --dry-run
