@@ -2,28 +2,25 @@ import axios from 'axios';
 
 // eslint-disable-next-line no-useless-escape
 const regularSentenceForFilter = new RegExp('\ айт (не( |)доступен|выставлен на продажу)|(упить|родлить) этот домен|page cannot be display|Единый реес|suspended domain', 'ig');
-const attemptcount = 1;
+const attemptcount = 3;
 
 const isRedirect = (url, answer) => {
-  const httpUrl = `http://${url}/`;
-  const httpsUrl = `https://${url}/`;
+  // eslint-disable-next-line no-useless-escape
+  const filter = `htt(p|ps):\/\/${url}\/`;
+  const urlRegExp = new RegExp(filter, 'ig');
   const answerUrl = answer.request.res.responseUrl;
-  return !((answerUrl === httpUrl) || (answerUrl === httpsUrl));
+  return answerUrl.search(urlRegExp) === -1;
 };
 
-const isStopper = (sentece, regExp) => {
-  const result = sentece.search(regExp);
-  return result >= 0;
-};
+const isStopper = (sentece, regExp) => sentece.search(regExp) >= 0;
 
 const isOmission = (url, answer) => (answer.status === 200)
   && !isStopper(answer.data, regularSentenceForFilter) && !isRedirect(url, answer);
 
 const getResponse = async (url, attempt) => {
   try {
-    // console.log(url);
-    const answer = await axios.get(`http://${url}`, { timeout: 3000 });
-    console.log(`Domain ${url} ответ от ${answer.request.res.responseUrl} доступен ${isOmission(url, answer)} `);
+    const answer = await axios.get(`http://${url}`, { timeout: 5000 });
+    console.log(`Domain ${url} ответ от ${answer.request.res.responseUrl}`); // редирект ${isRedirect(url, answer)} фильтр ${isStopper(answer.data, regularSentenceForFilter)}
     return {
       url,
       cheskResult: isOmission(url, answer),

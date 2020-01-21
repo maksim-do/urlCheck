@@ -8,7 +8,7 @@ export default async () => {
   const list = parse('./Domains.txt');
   const resultCheckUrlList = await checkUrlList(list);
   const UrlsForManualChesk = resultCheckUrlList.length > UrlCountForManualChesk - 1
-    ? resultCheckUrlList.slice(UrlCountForManualChesk)
+    ? resultCheckUrlList.slice(0, UrlCountForManualChesk)
     : resultCheckUrlList.slice();
   const resultSentence = `Проверка завершена. Проверено ${list.length} ресурсов. Признаков нарушений ${resultCheckUrlList.length}`;
   writeResultFile(UrlsForManualChesk, resultSentence);

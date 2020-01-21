@@ -4,7 +4,7 @@ const beginFile = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><m
 const endFile = '</body></html>';
 const getNameFile = () => {
   const date = new Date();
-  return `${date.getSeconds()}-${date.getMinutes()}-${date.getHours()}_${date.getDate()}-${date.getMonth()}-${date.getFullYear()}.html`;
+  return `${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}_${date.getDate()}-${date.getMonth()}-${date.getFullYear()}.html`;
 };
 
 export default (domens, sentence) => {
