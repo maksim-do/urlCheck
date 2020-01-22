@@ -37,11 +37,25 @@ const getResponse = async (url, attempt) => {
   }
 };
 
-const сheсkList = async (domens) => {
-  const list = domens.map((el) => getResponse(el, attemptcount));
-  return (await Promise.all(list))
+const сheсkChankList = async (list) => {
+  const listGetAxios = list.map((el) => getResponse(el, attemptcount));
+  return (await Promise.all(listGetAxios))
     .filter(({ cheskResult }) => cheskResult)
     .map(({ url }) => url);
 };
+
+const сheсkList = async (domains) => {
+  const sizeChunk = 500;
+  const iter = async (list, checkResult) => {
+    if (list.length === 0) return checkResult;
+    const endChunk = list.length < sizeChunk;
+    const chunk = endChunk ? list.slice() : list.slice(0, sizeChunk);
+    const newList = endChunk ? [] : list.slice(sizeChunk);
+    const checkChunk = await сheсkChankList(chunk);
+    return iter(newList, [...checkResult, checkChunk]);
+  };
+  return iter(domains, []);
+};
+
 
 export default сheсkList;
